@@ -5,6 +5,7 @@ module.exports = {
     password: "ishimori",
     database: "burger",
     define: {
+        timestamps: true,
         underscored: true,
         underscoredAll: true
     }
