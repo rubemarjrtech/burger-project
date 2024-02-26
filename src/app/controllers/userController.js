@@ -8,25 +8,38 @@ class UserController {
             const schema = Yup.object().shape({
                 name: Yup.string().required(),
                 email: Yup.string().email().required(),
-                password: Yup.string().min(8).required(),
+                senha: Yup.string().min(8).required(),
                 admin: Yup.boolean()
             });
 
             await schema.validateSync(request.body, { abortEarly: false });
 
-            const { name, email, password, admin } = request.body;
+            const { name, email, senha, admin } = request.body;
+
+            const checkUser = await User.findOne({
+                where: { email }
+            });
+
+            if (checkUser) {
+                return response.status(400).json({
+                    error: "Email already in use"
+                });
+            }
 
             const user = await User.create({
                 id: v4(),
                 name,
                 email,
-                password,
+                senha,
                 admin
             });
 
-            return response
-                .status(201)
-                .json({ message: "usuario criado com sucesso", user });
+            return response.status(201).json({
+                message: "User created successfully",
+                id: user.id,
+                name,
+                email
+            });
         } catch (err) {
             response.status(400).json({ error: err.errors });
         }
