@@ -11,5 +11,6 @@ const router = new Router();
 router.post("/sign-up", UserController.store);
 router.post("/sessions", SessionController.store);
 router.post("/products", upload.single("file"), ProductController.store);
+router.get("/products", ProductController.index);
 
 export default router;
