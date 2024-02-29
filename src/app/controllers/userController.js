@@ -12,7 +12,7 @@ class UserController {
                 admin: Yup.boolean()
             });
 
-            await schema.validateSync(request.body, { abortEarly: false });
+            schema.validateSync(request.body, { abortEarly: false });
 
             const { name, email, senha, admin } = request.body;
 

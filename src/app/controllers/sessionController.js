@@ -34,13 +34,17 @@ class SessionController {
             });
         }
 
+        const tkn = jwt.sign({ id: user.id }, authConfig.secret, {
+            expiresIn: authConfig.expiresIn
+        });
+
+        console.log(tkn);
+
         return response.json({
             id: user.id,
             email,
             name: user.name,
-            token: jwt.sign({ id: user.id }, authConfig.secret, {
-                expiresIn: authConfig.expiresIn
-            })
+            token: tkn
         });
     }
 }
