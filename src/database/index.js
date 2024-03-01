@@ -3,11 +3,13 @@ import configDatabase from "../config/database";
 import User from "../app/models/User";
 import Product from "../app/models/Product";
 import Categories from "../app/models/Categories";
+import mongoose from "mongoose";
 
 const models = [User, Product, Categories];
 class Database {
     constructor() {
         this.init();
+        this.mongo();
     }
 
     init() {
@@ -18,6 +20,12 @@ class Database {
                 (model) =>
                     model.associate && model.associate(this.connection.models)
             );
+    }
+
+    mongo() {
+        this.mongoConnection = mongoose.connect(
+            "mongodb://localhost:27017/codeburger"
+        );
     }
 }
 

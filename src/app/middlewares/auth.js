@@ -25,6 +25,7 @@ export default (request, response, next) => {
             }
 
             request.id = decoded.id;
+            request.name = decoded.name;
 
             return next();
         });
