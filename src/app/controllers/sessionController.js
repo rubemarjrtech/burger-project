@@ -42,8 +42,6 @@ class SessionController {
             }
         );
 
-        console.log(tkn);
-
         return response.json({
             id: user.id,
             email,

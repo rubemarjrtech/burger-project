@@ -6,7 +6,7 @@ import SessionController from "./app/controllers/sessionController";
 import ProductController from "./app/controllers/productsController";
 import authMiddleware from "./app/middlewares/auth";
 import CategoriesController from "./app/controllers/categoriesController";
-import orderController from "./app/controllers/orderController";
+import OrderController from "./app/controllers/orderController";
 
 const upload = multer(multerConfig);
 const router = new Router();
@@ -21,6 +21,8 @@ router.get("/products", ProductController.index);
 router.post("/categories", CategoriesController.store);
 router.get("/categories", CategoriesController.index);
 
-router.post("/orders", orderController.store);
+router.post("/orders", OrderController.store);
+router.get("/orders", OrderController.index);
+router.put("/orders/:id", OrderController.update);
 
 export default router;
