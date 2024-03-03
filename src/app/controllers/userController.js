@@ -12,7 +12,13 @@ class UserController {
                 admin: Yup.boolean()
             });
 
-            schema.validateSync(request.body, { abortEarly: false });
+            try {
+                await schema.validateSync(request.body, { abortEarly: false });
+            } catch (err) {
+                return response.status(401).json({
+                    error: err.errors
+                });
+            }
 
             const { name, email, senha, admin } = request.body;
 
@@ -41,7 +47,12 @@ class UserController {
                 email
             });
         } catch (err) {
-            response.status(400).json({ error: err.errors });
+            response
+                .status(400)
+                .json({
+                    error: err.name,
+                    message: "User signup failed. Please try again."
+                });
         }
     }
 }

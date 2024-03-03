@@ -11,10 +11,22 @@ class ProductController {
                 category_id: Yup.number().required()
             });
 
-            await schema.validateSync(request.body, { abortEarly: false });
+            try {
+                await schema.validateSync(request.body, { abortEarly: false });
+            } catch (err) {
+                response.status(401).json({
+                    error: err.errors
+                });
+            }
 
             const { filename: path } = request.file;
             const { name, price, category_id } = request.body;
+
+            const { admin: isAdmin } = await User.findByPk(request.id);
+
+            if (!isAdmin) {
+                return response.status(401).json();
+            }
 
             const product = await Product.create({
                 name,
@@ -28,7 +40,9 @@ class ProductController {
                 product
             });
         } catch (error) {
-            response.status(400).json({ message: error.errors });
+            response
+                .status(401)
+                .json({ error: error, message: "Not authorized" });
         }
     }
 

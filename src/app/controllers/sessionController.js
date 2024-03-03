@@ -5,49 +5,55 @@ import authConfig from "../../config/auth";
 
 class SessionController {
     async store(request, response) {
-        const schema = Yup.object().shape({
-            email: Yup.string().email().required(),
-            senha: Yup.string().required()
-        });
-
-        if (!(await schema.isValid(request.body))) {
-            return response.status(401).json({
-                error: "Make sure your email and password are correct and try again."
+        try {
+            const schema = Yup.object().shape({
+                email: Yup.string().email().required(),
+                senha: Yup.string().required()
             });
-        }
 
-        const { email, senha } = request.body;
-
-        const user = await User.findOne({
-            where: { email }
-        });
-
-        if (!user) {
-            return response.status(401).json({
-                error: "Make sure your email and password are correct and try again."
-            });
-        }
-
-        if (!(await user.checkPassword(senha))) {
-            return response.status(401).json({
-                error: "Make sure your email and password are correct and try again."
-            });
-        }
-
-        const tkn = jwt.sign(
-            { id: user.id, name: user.name },
-            authConfig.secret,
-            {
-                expiresIn: authConfig.expiresIn
+            if (!(await schema.isValid(request.body))) {
+                return response.status(401).json({
+                    error: "Make sure your email and password are correct and try again."
+                });
             }
-        );
 
-        return response.json({
-            id: user.id,
-            email,
-            name: user.name,
-            token: tkn
-        });
+            const { email, senha } = request.body;
+
+            const user = await User.findOne({
+                where: { email }
+            });
+
+            if (!user) {
+                return response.status(401).json({
+                    error: "Login failed. Make sure your email and password are correct and try again."
+                });
+            }
+
+            if (!(await user.checkPassword(senha))) {
+                return response.status(401).json({
+                    error: "Login failed. Make sure your email and password are correct and try again."
+                });
+            }
+
+            const tkn = jwt.sign(
+                { id: user.id, name: user.name },
+                authConfig.secret,
+                {
+                    expiresIn: authConfig.expiresIn
+                }
+            );
+
+            return response.json({
+                id: user.id,
+                email,
+                name: user.name,
+                token: tkn
+            });
+        } catch (error) {
+            return response.status(401).json({
+                error: error
+            });
+        }
     }
 }
 

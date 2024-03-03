@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import Product from "../models/Product";
 import Categories from "../models/Categories";
 import Order from "../schemas/Order";
+import User from "../models/User";
 
 class OrderController {
     async store(request, response) {
@@ -17,9 +18,15 @@ class OrderController {
                     )
             });
 
-            await schema.validateSync(request.body, {
-                abortEarly: false
-            });
+            try {
+                await schema.validateSync(request.body, {
+                    abortEarly: false
+                });
+            } catch (err) {
+                return response.status(401).json({
+                    error: err.errors
+                });
+            }
 
             const productsId = request.body.products.map(
                 (product) => product.id
@@ -64,10 +71,10 @@ class OrderController {
                 status: "Order was successful!"
             };
 
-            const registerOrder = await Order.create(order);
+            const registeredOrder = await Order.create(order);
 
             return response.status(201).json({
-                data: registerOrder
+                data: registeredOrder
             });
         } catch (error) {
             return response.status(401).json({
@@ -81,9 +88,9 @@ class OrderController {
             const allOrders = await Order.find();
 
             return response.status(201).json(allOrders);
-        } catch (err) {
+        } catch (error) {
             return response.status(401).json({
-                error: err.errors
+                error: error.name
             });
         }
     }
@@ -94,10 +101,22 @@ class OrderController {
                 status: Yup.string().required().strict()
             });
 
-            schema.validateSync(request.body);
+            try {
+                await schema.validateSync(request.body);
+            } catch (err) {
+                return response.status(401).json({
+                    error: err.errors
+                });
+            }
 
             const { id } = request.params;
             const { status } = request.body;
+
+            const { admin: isAdmin } = await User.findByPk(request.id);
+
+            if (!isAdmin) {
+                return response.status(401).json();
+            }
 
             await Order.updateOne(
                 {
@@ -109,9 +128,11 @@ class OrderController {
             return response.status(201).json({
                 message: "Order updated successfully!"
             });
-        } catch (err) {
+        } catch (error) {
             return response.status(401).json({
-                error: err.errors
+                error: error.name,
+                message:
+                    "Error updating your order. Please refresh the page and try again"
             });
         }
     }

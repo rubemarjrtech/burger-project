@@ -1,17 +1,30 @@
 import * as Yup from "yup";
 import Categories from "../models/Categories";
+import User from "../models/User";
 
 class CategoriesController {
     async store(request, response) {
-        const schema = Yup.object().shape({
-            name: Yup.string().required()
-        });
-
-        schema.validateSync(request.body);
-
-        const { name } = request.body;
-
         try {
+            const schema = Yup.object().shape({
+                name: Yup.string().required()
+            });
+
+            try {
+                await schema.validateSync(request.body);
+            } catch (err) {
+                response.status(401).json({
+                    error: err.errors
+                });
+            }
+
+            const { name } = request.body;
+
+            const { admin: isAdmin } = await User.findByPk(request.id);
+
+            if (!isAdmin) {
+                return response.status(401).json();
+            }
+
             const categoryExists = await Categories.findOne({
                 where: { name }
             });
@@ -46,9 +59,9 @@ class CategoriesController {
                 message: "Data retrieved successfully",
                 data
             });
-        } catch (err) {
+        } catch (error) {
             return response.status(401).json({
-                message: err.errors
+                message: error.name
             });
         }
     }
