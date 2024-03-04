@@ -17,6 +17,7 @@ class CategoriesController {
                 });
             }
 
+            const { filename: path } = request.file;
             const { name } = request.body;
 
             const { admin: isAdmin } = await User.findByPk(request.id);
@@ -36,7 +37,8 @@ class CategoriesController {
             }
 
             const { id } = await Categories.create({
-                name
+                name,
+                path
             });
 
             return response.status(201).json({
@@ -46,7 +48,7 @@ class CategoriesController {
             });
         } catch (err) {
             return response.status(401).json({
-                error: err.errors
+                error: err.name
             });
         }
     }
@@ -62,6 +64,66 @@ class CategoriesController {
         } catch (error) {
             return response.status(401).json({
                 message: error.name
+            });
+        }
+    }
+
+    async update(request, response) {
+        try {
+            const schema = Yup.object().shape({
+                name: Yup.string()
+            });
+
+            try {
+                await schema.validateSync(request.body);
+            } catch (err) {
+                response.status(401).json({
+                    error: err.errors
+                });
+            }
+
+            const { admin: isAdmin } = await User.findByPk(request.id);
+
+            if (!isAdmin) {
+                return response.status(401).json();
+            }
+
+            let path;
+            if (request.file) {
+                path = request.file.filename;
+            }
+
+            const { name } = request.body;
+            const { id } = request.params;
+
+            const categoryExists = await Categories.findOne({
+                where: { id }
+            });
+
+            if (!categoryExists) {
+                return response.status(400).json({
+                    error: "Category does not exist. Please check the category id and try again."
+                });
+            }
+
+            await Categories.update(
+                {
+                    name,
+                    path
+                },
+                {
+                    where: { id }
+                }
+            );
+
+            return response.status(200).json({
+                message: "Category updated successfully",
+                name,
+                id
+            });
+        } catch (err) {
+            return response.status(401).json({
+                error: err.message
             });
         }
     }

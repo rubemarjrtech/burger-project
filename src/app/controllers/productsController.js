@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Product from "../models/Product";
 import Categories from "../models/Categories";
+import User from "../models/User";
 
 class ProductController {
     async store(request, response) {
@@ -8,7 +9,8 @@ class ProductController {
             const schema = Yup.object().shape({
                 name: Yup.string().required(),
                 price: Yup.number().required(),
-                category_id: Yup.number().required()
+                category_id: Yup.number().required(),
+                offer: Yup.bool()
             });
 
             try {
@@ -20,7 +22,7 @@ class ProductController {
             }
 
             const { filename: path } = request.file;
-            const { name, price, category_id } = request.body;
+            const { name, price, category_id, offer } = request.body;
 
             const { admin: isAdmin } = await User.findByPk(request.id);
 
@@ -32,7 +34,8 @@ class ProductController {
                 name,
                 price,
                 category_id,
-                path
+                path,
+                offer
             });
 
             return response.status(201).json({
@@ -42,7 +45,7 @@ class ProductController {
         } catch (error) {
             response
                 .status(401)
-                .json({ error: error, message: "Not authorized" });
+                .json({ error: error.name, message: "Not authorized" });
         }
     }
 
@@ -58,6 +61,70 @@ class ProductController {
         });
 
         return response.json(products);
+    }
+
+    async update(request, response) {
+        try {
+            const schema = Yup.object().shape({
+                name: Yup.string(),
+                price: Yup.number(),
+                category_id: Yup.number(),
+                offer: Yup.boolean()
+            });
+
+            try {
+                await schema.validateSync(request.body, { abortEarly: false });
+            } catch (err) {
+                response.status(401).json({
+                    error: err.errors
+                });
+            }
+
+            const { admin: isAdmin } = await User.findByPk(request.id);
+
+            if (!isAdmin) {
+                return response.status(401).json();
+            }
+
+            let path;
+
+            if (request.file) {
+                path = request.file.filename;
+            }
+
+            const { id } = request.params;
+
+            const checkId = await Product.findByPk(id);
+
+            if (!checkId) {
+                return response.status(401).json({
+                    error: "Product id does not exist. Please try again."
+                });
+            }
+
+            const { name, price, category_id, offer } = request.body;
+
+            await Product.update(
+                {
+                    name,
+                    price,
+                    category_id,
+                    path,
+                    offer
+                },
+                {
+                    where: { id }
+                }
+            );
+
+            return response.status(201).json({
+                message: "Product info updated successfully!"
+            });
+        } catch (error) {
+            response
+                .status(401)
+                .json({ error: error, message: "Not authorized" });
+        }
     }
 }
 
