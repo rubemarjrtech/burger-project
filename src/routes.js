@@ -11,7 +11,7 @@ import OrderController from "./app/controllers/orderController";
 const upload = multer(multerConfig);
 const router = new Router();
 
-router.post("/sign-up", UserController.store);
+router.post("/users", UserController.store);
 router.post("/sessions", SessionController.store);
 
 router.use(authMiddleware);
