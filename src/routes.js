@@ -26,6 +26,7 @@ router.put(
     upload.single("file"),
     CategoriesController.update
 );
+router.delete("/categories/:id", CategoriesController.delete);
 
 router.post("/orders", OrderController.store);
 router.get("/orders", OrderController.index);
