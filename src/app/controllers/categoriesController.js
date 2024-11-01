@@ -10,9 +10,9 @@ class CategoriesController {
             });
 
             try {
-                await schema.validateSync(request.body);
+                schema.validateSync(request.body);
             } catch (err) {
-                response.status(401).json({
+                return response.status(401).json({
                     error: err.errors
                 });
             }
@@ -23,7 +23,7 @@ class CategoriesController {
             const { admin: isAdmin } = await User.findByPk(request.id);
 
             if (!isAdmin) {
-                return response.status(401).json();
+                return response.status(403).json();
             }
 
             const categoryExists = await Categories.findOne({
@@ -75,9 +75,9 @@ class CategoriesController {
             });
 
             try {
-                await schema.validateSync(request.body);
+                schema.validateSync(request.body);
             } catch (err) {
-                response.status(401).json({
+                return response.status(401).json({
                     error: err.errors
                 });
             }
@@ -96,12 +96,12 @@ class CategoriesController {
             const { name } = request.body;
             const { id } = request.params;
 
-            const categoryExists = await Categories.findOne({
+            const category = await Categories.findOne({
                 where: { id }
             });
 
-            if (!categoryExists) {
-                return response.status(400).json({
+            if (!category) {
+                return response.status(404).json({
                     error: "Category does not exist. Please check the category id and try again."
                 });
             }
@@ -117,13 +117,38 @@ class CategoriesController {
             );
 
             return response.status(200).json({
-                message: "Category updated successfully",
-                name,
-                id
+                message: "Category updated successfully"
             });
         } catch (err) {
-            return response.status(401).json({
+            return response.status(500).json({
                 error: err.message
+            });
+        }
+    }
+
+    async delete(request, response) {
+        try {
+            const { id } = request.params;
+
+            const category = await Categories.findOne({
+                where: { id }
+            });
+
+            if (!category) {
+                return response.status(404).json({
+                    message: "Category does not exist"
+                });
+            }
+
+            await category.destroy();
+
+            return response.status(200).json({
+                message: "Categoria deleted successfully!"
+            });
+        } catch (err) {
+            console.log(err);
+            response.status(500).json({
+                message: "Something went wrong"
             });
         }
     }

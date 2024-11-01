@@ -14,9 +14,9 @@ class ProductController {
             });
 
             try {
-                await schema.validateSync(request.body, { abortEarly: false });
+                schema.validateSync(request.body, { abortEarly: false });
             } catch (err) {
-                response.status(401).json({
+                return response.status(401).json({
                     error: err.errors
                 });
             }
@@ -42,25 +42,31 @@ class ProductController {
                 message: "Product added successfully!",
                 product
             });
-        } catch (error) {
-            response
-                .status(401)
-                .json({ error: error.name, message: "Not authorized" });
+        } catch (err) {
+            console.log(err);
+            response.status(500).json({ error: "Something went wrong" });
         }
     }
 
-    async index(request, response) {
-        const products = await Product.findAll({
-            include: [
-                {
-                    model: Categories,
-                    as: "category",
-                    attributes: ["name"]
-                }
-            ]
-        });
+    async index(_, response) {
+        try {
+            const products = await Product.findAll({
+                include: [
+                    {
+                        model: Categories,
+                        as: "category",
+                        attributes: ["name"]
+                    }
+                ]
+            });
 
-        return response.json(products);
+            return response.status(200).json(products);
+        } catch (err) {
+            console.log(err);
+            response.status(500).json({
+                error: "Something went wrong"
+            });
+        }
     }
 
     async update(request, response) {
@@ -73,9 +79,9 @@ class ProductController {
             });
 
             try {
-                await schema.validateSync(request.body, { abortEarly: false });
+                schema.validateSync(request.body, { abortEarly: false });
             } catch (err) {
-                response.status(401).json({
+                return response.status(401).json({
                     error: err.errors
                 });
             }
@@ -94,11 +100,11 @@ class ProductController {
 
             const { id } = request.params;
 
-            const checkId = await Product.findByPk(id);
+            const product = await Product.findByPk(id);
 
-            if (!checkId) {
-                return response.status(401).json({
-                    error: "Product id does not exist. Please try again."
+            if (!product) {
+                return response.status(404).json({
+                    error: "Product does not exist. Please try again."
                 });
             }
 
@@ -117,13 +123,12 @@ class ProductController {
                 }
             );
 
-            return response.status(201).json({
+            return response.status(200).json({
                 message: "Product info updated successfully!"
             });
-        } catch (error) {
-            response
-                .status(401)
-                .json({ error: error, message: "Not authorized" });
+        } catch (err) {
+            console.log(err);
+            response.status(500).json({ error: "Something went wrong" });
         }
     }
 }

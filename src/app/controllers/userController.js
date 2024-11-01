@@ -13,7 +13,7 @@ class UserController {
             });
 
             try {
-                await schema.validateSync(request.body, { abortEarly: false });
+                schema.validateSync(request.body, { abortEarly: false });
             } catch (err) {
                 return response.status(401).json({
                     error: err.errors
@@ -47,12 +47,11 @@ class UserController {
                 email
             });
         } catch (err) {
-            response
-                .status(400)
-                .json({
-                    error: err.name,
-                    message: "User signup failed. Please try again."
-                });
+            console.log(err);
+            response.status(500).json({
+                error: err.name,
+                message: "User signup failed. Please try again."
+            });
         }
     }
 }
