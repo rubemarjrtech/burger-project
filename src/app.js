@@ -1,6 +1,5 @@
 import express from "express";
 import router from "./routes.js";
-import "dotenv/config";
 import "./database/index.js";
 import path, { resolve } from "path";
 import { fileURLToPath } from "url";

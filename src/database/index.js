@@ -12,7 +12,12 @@ class Database {
     }
 
     init() {
-        this.connection = new Sequelize(process.env.POSTGRES_URL);
+        this.connection = new Sequelize(
+            "postgresql://postgres:NPFTxfnuJOfwEOtiShsMudLUHeYFjUzr@autorack.proxy.rlwy.net:58077/railway",
+            {
+                dialect: "postgres"
+            }
+        );
         models
             .map((model) => model.init(this.connection))
             .map(
