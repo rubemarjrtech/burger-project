@@ -1,4 +1,5 @@
 import Sequelize from "sequelize";
+import databaseConfig from "../config/database.js";
 import User from "../app/models/User.js";
 import Product from "../app/models/Product.js";
 import Categories from "../app/models/Categories.js";

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     dialect: "postgres",
     url: process.env.POSTGRES_URL,
     define: {
