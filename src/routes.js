@@ -11,6 +11,10 @@ import OrderController from "./app/controllers/orderController";
 const upload = multer(multerConfig);
 const router = new Router();
 
+router.get("/", (_, response) =>
+    response.json({ message: "Welcome to code burger API" })
+);
+
 router.post("/users", UserController.store);
 router.post("/sessions", SessionController.store);
 
