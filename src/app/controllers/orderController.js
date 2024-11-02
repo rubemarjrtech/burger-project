@@ -19,7 +19,7 @@ class OrderController {
             });
 
             try {
-                await schema.validateSync(request.body, {
+                schema.validateSync(request.body, {
                     abortEarly: false
                 });
             } catch (err) {
@@ -32,7 +32,7 @@ class OrderController {
                 (product) => product.id
             );
 
-            const findProducts = await Product.findAll({
+            const products = await Product.findAll({
                 where: {
                     id: productsId
                 },
@@ -45,7 +45,7 @@ class OrderController {
                 ]
             });
 
-            const editedProduct = findProducts.map((product) => {
+            const normalizedProducts = products.map((product) => {
                 const productIndex = request.body.products.findIndex(
                     (currentItem) => currentItem.id === product.id
                 );
@@ -67,7 +67,7 @@ class OrderController {
                     id: request.id,
                     name: request.name
                 },
-                products: editedProduct,
+                products: normalizedProducts,
                 status: "Order was successful!"
             };
 
@@ -76,21 +76,23 @@ class OrderController {
             return response.status(201).json({
                 data: registeredOrder
             });
-        } catch (error) {
-            return response.status(401).json({
-                error: "An error has occured with your order, please try again."
+        } catch (err) {
+            console.log(err);
+            return response.status(500).json({
+                error: "Something went wrong"
             });
         }
     }
 
-    async index(request, response) {
+    async index(_, response) {
         try {
-            const allOrders = await Order.find();
+            const orders = await Order.find();
 
-            return response.status(201).json(allOrders);
-        } catch (error) {
-            return response.status(401).json({
-                error: error.name
+            return response.status(200).json(orders);
+        } catch (err) {
+            console.log(err);
+            return response.status(500).json({
+                error: "Something went wrong"
             });
         }
     }
@@ -102,7 +104,7 @@ class OrderController {
             });
 
             try {
-                await schema.validateSync(request.body);
+                schema.validateSync(request.body);
             } catch (err) {
                 return response.status(401).json({
                     error: err.errors
@@ -125,14 +127,13 @@ class OrderController {
                 { status }
             );
 
-            return response.status(201).json({
+            return response.status(200).json({
                 message: "Order updated successfully!"
             });
-        } catch (error) {
-            return response.status(401).json({
-                error: error.name,
-                message:
-                    "Error updating your order. Please refresh the page and try again"
+        } catch (err) {
+            console.log(err);
+            return response.status(500).json({
+                error: "Something went wrong"
             });
         }
     }
