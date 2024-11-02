@@ -1,8 +1,12 @@
 import express from "express";
-import router from "./routes";
+import router from "./routes.js";
 import "dotenv/config";
-import "./database";
-import { resolve } from "path";
+import "./database/index.js";
+import path, { resolve } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 class App {
     constructor() {
         this.app = express();
