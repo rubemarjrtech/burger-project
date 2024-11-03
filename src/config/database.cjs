@@ -1,6 +1,8 @@
+require("dotenv").config();
+
 module.exports = {
-    dialect: "postgres",
-    define: {
-        timestamps: true
+    production: {
+        dialect: "postgres",
+        url: process.env.POSTGRES_URL
     }
 };
