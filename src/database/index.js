@@ -13,16 +13,9 @@ class Database {
     }
 
     init() {
-        this.connection = new Sequelize(
-            process.env.POSTGRES_DB,
-            process.env.POSTGRES_USER,
-            process.env.POSTGRES_PASSWORD,
-            {
-                host: process.env.POSTGRES_HOST,
-                port: process.env.POSTGRES_PORT,
-                dialect: "postgres"
-            }
-        );
+        this.connection = new Sequelize(process.env.POSTGRES_URL, {
+            dialect: "postgres"
+        });
         models
             .map((model) => model.init(this.connection))
             .map(
@@ -32,9 +25,7 @@ class Database {
     }
 
     mongo() {
-        this.mongoConnection = mongoose.connect(
-            "mongodb://mongo:lTOoduUWFDjDOjEOlaFarZbZswRzZJyi@autorack.proxy.rlwy.net:57456"
-        );
+        this.mongoConnection = mongoose.connect(process.env.MONGO_URL);
     }
 }
 
