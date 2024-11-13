@@ -22,11 +22,11 @@ Ps: You can test it in the API testing software/service of your preference, I am
 
 Create an admin user:
 
-![Create User](https://i.ibb.co/FgPfJMn/Captura-de-tela-2024-11-11-110458.png)
+![Create user](https://i.ibb.co/FgPfJMn/Captura-de-tela-2024-11-11-110458.png)
 
 Login with admin user:
 
-![Login User](https://i.ibb.co/1qmWNtp/Captura-de-tela-2024-11-11-111142.png)
+![Login user](https://i.ibb.co/1qmWNtp/Captura-de-tela-2024-11-11-111142.png)
 
 Create new category of products:
 
@@ -37,3 +37,23 @@ Do not forget to add the token you received in the response after logging to the
 Get a list of all added categories:
 
 ![Get categories](https://i.ibb.co/qxQJ29K/Captura-de-tela-2024-11-11-112320.png)
+
+Update an existing category:
+
+![Update category](https://i.ibb.co/mhPNhVy/Captura-de-tela-2024-11-13-184717.png)
+
+Delete an existing category:
+
+![Delete category](https://i.ibb.co/KhSDjdc/Captura-de-tela-2024-11-13-185027.png)
+
+Create a new product:
+
+![Create product](https://i.ibb.co/k0xfVnm/Captura-de-tela-2024-11-13-185339.png)
+
+Get a list of all products:
+
+![Get products](https://i.ibb.co/pwCBNjB/Captura-de-tela-2024-11-13-185602.png")
+
+Update product info:
+
+![Update product](https://i.ibb.co/LNSWfW1/Captura-de-tela-2024-11-13-185810.png)
