@@ -52,8 +52,28 @@ Create a new product:
 
 Get a list of all products:
 
-![Get products](https://i.ibb.co/pwCBNjB/Captura-de-tela-2024-11-13-185602.png")
+![Get products](https://i.ibb.co/pwCBNjB/Captura-de-tela-2024-11-13-185602.png)
 
 Update product info:
 
 ![Update product](https://i.ibb.co/LNSWfW1/Captura-de-tela-2024-11-13-185810.png)
+
+Place order:
+
+![Place order](https://i.ibb.co/6cKdPmV/Captura-de-tela-2024-11-26-155343.png)
+
+Get a list of orders:
+
+![Find orders](https://i.ibb.co/YWCvCYq/Captura-de-tela-2024-11-26-155456.png)
+
+Update order status:
+
+![Update order](https://i.ibb.co/vkQb8mq/Captura-de-tela-2024-11-26-155838.png)
+
+### Versioning
+
+1.0.0.0
+
+### Author
+
+Rubemar Rocha de Souza Junior (https://github.com/rubemarjrtech) In case of sensitive bugs like security vulnerabilities, please contact rubemarrocha22@gmail.com directly instead of using issue tracker.
