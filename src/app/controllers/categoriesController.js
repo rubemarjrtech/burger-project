@@ -53,7 +53,7 @@ class CategoriesController {
         }
     }
 
-    async index(request, response) {
+    async index(_, response) {
         try {
             const data = await Categories.findAll();
 
@@ -62,12 +62,33 @@ class CategoriesController {
                 data
             });
         } catch (error) {
-            return response.status(401).json({
-                message: error.name
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
             });
         }
     }
 
+    async findOne(request, response) {
+        try {
+            const id = request.params["id"];
+            const category = await Categories.findByPk(id, {
+                all: true
+            });
+
+            if (!category)
+                return response.status(404).json({
+                    message: "Category not found"
+                });
+
+            return response.status(200).json(category);
+        } catch (error) {
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
+        }
+    }
     async update(request, response) {
         try {
             const schema = Yup.object().shape({
@@ -121,12 +142,13 @@ class CategoriesController {
             });
         } catch (err) {
             return response.status(500).json({
-                error: err.message
+                message:
+                    "Something went wrong. Please try again or contact support"
             });
         }
     }
 
-    async delete(request, response) {
+    async remove(request, response) {
         try {
             const { id } = request.params;
 
@@ -143,12 +165,13 @@ class CategoriesController {
             await category.destroy();
 
             return response.status(200).json({
-                message: "Categoria deleted successfully!"
+                message: "Category deleted successfully!"
             });
         } catch (err) {
             console.log(err);
             response.status(500).json({
-                message: "Something went wrong"
+                message:
+                    "Something went wrong. Please try again or contact support"
             });
         }
     }

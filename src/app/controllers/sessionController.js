@@ -50,8 +50,9 @@ class SessionController {
                 token: tkn
             });
         } catch (error) {
-            return response.status(401).json({
-                error: error
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
             });
         }
     }
