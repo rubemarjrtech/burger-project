@@ -69,6 +69,33 @@ class ProductController {
         }
     }
 
+    async findOne(request, response) {
+        try {
+            const id = request.params["id"];
+
+            const product = await Product.findByPk(id, {
+                include: {
+                    all: true,
+                    attributes: {
+                        exclude: ["path", "url", "createdAt", "updatedAt"]
+                    }
+                }
+            });
+
+            if (!product)
+                return response.status(400).json({
+                    message: "Product not found."
+                });
+
+            return response.status(200).json(product);
+        } catch (error) {
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
+        }
+    }
+
     async update(request, response) {
         try {
             const schema = Yup.object().shape({
@@ -129,6 +156,29 @@ class ProductController {
         } catch (err) {
             console.log(err);
             response.status(500).json({ error: "Something went wrong" });
+        }
+    }
+
+    async remove(request, response) {
+        try {
+            const { id } = request.params;
+
+            const result = await Product.destroy({ where: { id } });
+
+            if (!result)
+                return response.status(400).json({
+                    message:
+                        "Could not delete product. Please verify if id exists and is valid"
+                });
+
+            return response.status(200).json({
+                message: "Product deleted successfully!"
+            });
+        } catch (error) {
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
         }
     }
 }

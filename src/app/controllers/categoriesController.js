@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import Categories from "../models/Categories.js";
 import User from "../models/User.js";
+import Product from "../models/Product.js";
 
 class CategoriesController {
     async store(request, response) {
@@ -73,7 +74,13 @@ class CategoriesController {
         try {
             const id = request.params["id"];
             const category = await Categories.findByPk(id, {
-                all: true
+                include: [
+                    {
+                        model: Product,
+                        as: "products",
+                        attributes: ["id", "name", "url", "price", "offer"]
+                    }
+                ]
             });
 
             if (!category)
@@ -83,6 +90,7 @@ class CategoriesController {
 
             return response.status(200).json(category);
         } catch (error) {
+            console.log(error);
             return response.status(500).json({
                 message:
                     "Something went wrong. Please try again or contact support"
