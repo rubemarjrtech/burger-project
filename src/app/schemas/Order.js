@@ -50,4 +50,29 @@ const OrderSchema = new mongoose.Schema(
     }
 );
 
+OrderSchema.virtual("total").get(function () {
+    if (!this.products || !Array.isArray(this.products)) return 0;
+
+    return this.products.reduce(
+        (acc, product) => acc + product.quantity * product.price,
+        0
+    );
+});
+OrderSchema.set("toJSON", {
+    virtuals: true,
+    transform: function (_, ret) {
+        delete ret.__v;
+        delete ret._id;
+        return ret;
+    }
+});
+OrderSchema.set("toObject", {
+    virtuals: true,
+    transform: function (_, ret) {
+        delete ret.__v;
+        delete ret._id;
+        return ret;
+    }
+});
+
 export default mongoose.model("Order", OrderSchema);

@@ -9,7 +9,7 @@ class User extends Model {
                 email: Sequelize.STRING,
                 senha: Sequelize.VIRTUAL,
                 password: Sequelize.STRING,
-                admin: Sequelize.BOOLEAN
+                admin: { type: Sequelize.BOOLEAN, defaultValue: false }
             },
             { sequelize }
         );
