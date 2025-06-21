@@ -54,6 +54,46 @@ class UserController {
             });
         }
     }
+
+    async index(_, response) {
+        try {
+            const users = await User.findAll({
+                attributes: {
+                    exclude: ["password"]
+                }
+            });
+
+            return response.status(200).json(users);
+        } catch (error) {
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
+        }
+    }
+
+    async remove(request, response) {
+        try {
+            const result = await User.destroy({
+                where: { id: request.user.id }
+            });
+
+            if (!result)
+                return response.status(400).json({
+                    message:
+                        "Could not delete user. Please verify if id exists and is valid"
+                });
+
+            return response.status(200).json({
+                message: "User deleted successfully!"
+            });
+        } catch (error) {
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
+        }
+    }
 }
 
 export default new UserController();

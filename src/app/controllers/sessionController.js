@@ -36,7 +36,7 @@ class SessionController {
             }
 
             const tkn = jwt.sign(
-                { id: user.id, name: user.name },
+                { id: user.id, name: user.name, admin: user.admin },
                 authConfig.secret,
                 {
                     expiresIn: authConfig.expiresIn

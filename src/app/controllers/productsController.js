@@ -83,7 +83,7 @@ class ProductController {
             });
 
             if (!product)
-                return response.status(400).json({
+                return response.status(404).json({
                     message: "Product not found."
                 });
 
