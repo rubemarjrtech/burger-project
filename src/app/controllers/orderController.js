@@ -2,8 +2,6 @@ import * as Yup from "yup";
 import Product from "../models/Product.js";
 import Categories from "../models/Categories.js";
 import Order from "../schemas/Order.js";
-import User from "../models/User.js";
-import mongoose from "mongoose";
 
 class OrderController {
     async store(request, response) {
@@ -144,12 +142,6 @@ class OrderController {
 
             const { id } = request.params;
             const { status } = request.body;
-
-            const { admin: isAdmin } = await User.findByPk(request.id);
-
-            if (!isAdmin) {
-                return response.status(401).json();
-            }
 
             await Order.updateOne(
                 {
