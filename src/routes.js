@@ -46,6 +46,8 @@ router.put(
     ProductController.update
 );
 router.delete("/products/:id", adminAuth, ProductController.remove);
+router.get("/orders", adminAuth, OrderController.index);
+router.put("/orders/:id", adminAuth, OrderController.update);
 
 router.use(authMiddleware);
 router.get("/products", ProductController.index);
@@ -55,9 +57,7 @@ router.get("/categories", CategoriesController.index);
 router.get("/categories/:id", CategoriesController.findOne);
 
 router.post("/orders", OrderController.store);
-router.get("/orders", OrderController.index);
 router.get("/orders/:id", OrderController.findOne);
-router.put("/orders/:id", OrderController.update);
 router.delete("/orders/:id", OrderController.remove);
 
 export default router;

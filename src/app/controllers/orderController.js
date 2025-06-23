@@ -24,7 +24,7 @@ class OrderController {
                     abortEarly: false
                 });
             } catch (err) {
-                return response.status(401).json({
+                return response.status(422).json({
                     error: err.errors
                 });
             }
@@ -65,8 +65,8 @@ class OrderController {
 
             const newOrder = {
                 user: {
-                    id: request.id,
-                    name: request.name
+                    id: request.user.id,
+                    name: request.user.name
                 },
                 products: normalizedProducts,
                 status: "Order was successful!"
@@ -87,7 +87,7 @@ class OrderController {
         } catch (err) {
             console.log(err);
             return response.status(500).json({
-                error: "Something went wrong"
+                error: "Something went wrong. Please try again or contact support."
             });
         }
     }
