@@ -165,7 +165,7 @@ class OrderController {
         try {
             const { id } = request.params;
 
-            const { deletedCount } = await Order.deleteOne(id);
+            const { deletedCount } = await Order.deleteOne({ id });
 
             if (!deletedCount)
                 return response.status(400).json({
@@ -177,6 +177,7 @@ class OrderController {
                 message: "Order deleted successfully!"
             });
         } catch (error) {
+            console.log(error);
             return response.status(500).json({
                 message:
                     "Something went wrong. Please try again or contact support"
