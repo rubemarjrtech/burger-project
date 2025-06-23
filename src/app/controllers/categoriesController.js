@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import Categories from "../models/Categories.js";
-import User from "../models/User.js";
 import Product from "../models/Product.js";
 
 class CategoriesController {
@@ -13,7 +12,7 @@ class CategoriesController {
             try {
                 schema.validateSync(request.body);
             } catch (err) {
-                return response.status(401).json({
+                return response.status(422).json({
                     error: err.errors
                 });
             }
@@ -21,17 +20,11 @@ class CategoriesController {
             const { filename: path } = request.file;
             const { name } = request.body;
 
-            const { admin: isAdmin } = await User.findByPk(request.id);
-
-            if (!isAdmin) {
-                return response.status(403).json();
-            }
-
-            const categoryExists = await Categories.findOne({
+            const category = await Categories.findOne({
                 where: { name }
             });
 
-            if (categoryExists) {
+            if (category) {
                 return response.status(400).json({
                     error: "Category already exists. Please try another name."
                 });
@@ -48,20 +41,17 @@ class CategoriesController {
                 id
             });
         } catch (err) {
-            return response.status(401).json({
-                error: err.name
+            return response.status(500).json({
+                error: "Something went wrong. Please try again or contact support."
             });
         }
     }
 
     async index(_, response) {
         try {
-            const data = await Categories.findAll();
+            const categories = await Categories.findAll();
 
-            return response.status(201).json({
-                message: "Data retrieved successfully",
-                data
-            });
+            return response.status(200).json(categories);
         } catch (error) {
             return response.status(500).json({
                 message:
@@ -106,15 +96,9 @@ class CategoriesController {
             try {
                 schema.validateSync(request.body);
             } catch (err) {
-                return response.status(401).json({
+                return response.status(422).json({
                     error: err.errors
                 });
-            }
-
-            const { admin: isAdmin } = await User.findByPk(request.id);
-
-            if (!isAdmin) {
-                return response.status(401).json();
             }
 
             let path;

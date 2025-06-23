@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 import Product from "../models/Product.js";
 import Categories from "../models/Categories.js";
-import User from "../models/User.js";
 
 class ProductController {
     async store(request, response) {
@@ -16,19 +15,13 @@ class ProductController {
             try {
                 schema.validateSync(request.body, { abortEarly: false });
             } catch (err) {
-                return response.status(401).json({
+                return response.status(422).json({
                     error: err.errors
                 });
             }
 
             const { filename: path } = request.file;
             const { name, price, category_id, offer } = request.body;
-
-            const { admin: isAdmin } = await User.findByPk(request.id);
-
-            if (!isAdmin) {
-                return response.status(401).json();
-            }
 
             const product = await Product.create({
                 name,
@@ -44,7 +37,10 @@ class ProductController {
             });
         } catch (err) {
             console.log(err);
-            response.status(500).json({ error: "Something went wrong" });
+            return response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
         }
     }
 
@@ -64,7 +60,8 @@ class ProductController {
         } catch (err) {
             console.log(err);
             response.status(500).json({
-                error: "Something went wrong"
+                message:
+                    "Something went wrong. Please try again or contact support"
             });
         }
     }
@@ -108,15 +105,9 @@ class ProductController {
             try {
                 schema.validateSync(request.body, { abortEarly: false });
             } catch (err) {
-                return response.status(401).json({
+                return response.status(422).json({
                     error: err.errors
                 });
-            }
-
-            const { admin: isAdmin } = await User.findByPk(request.id);
-
-            if (!isAdmin) {
-                return response.status(401).json();
             }
 
             let path;
@@ -155,7 +146,10 @@ class ProductController {
             });
         } catch (err) {
             console.log(err);
-            response.status(500).json({ error: "Something went wrong" });
+            response.status(500).json({
+                message:
+                    "Something went wrong. Please try again or contact support"
+            });
         }
     }
 
