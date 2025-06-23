@@ -165,7 +165,7 @@ class OrderController {
         try {
             const { id } = request.params;
 
-            const { deletedCount } = await Order.deleteOne({ id });
+            const { deletedCount } = await Order.deleteOne({ _id: id });
 
             if (!deletedCount)
                 return response.status(400).json({
