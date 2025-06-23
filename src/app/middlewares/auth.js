@@ -13,7 +13,8 @@ export default (request, response, next) => {
     const token = bearerToken.split(" ")[1];
 
     try {
-        jwt.verify(token, authConfig.secret);
+        const decodedUser = jwt.verify(token, authConfig.secret);
+        request["user"] = decodedUser;
         next();
     } catch (error) {
         console.log(error);
